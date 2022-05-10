@@ -39,3 +39,37 @@ public void setUserDao(UserDao userDao) {
 ***
 ## 构造器注入
 方法和setter注入一样，配置文件有不同，一般来说推荐使用setter注入
+***
+## 自动装配
+不用setter和构造器，直接改配置  
+```
+<bean id="userservice" class="com.tongjiaqian.Service.Impl.UserServiceImpl" autowire="byType">
+```
+一般来说都是根据类型
+***
+## 集合注入
+```
+<property name="array/list/set">
+    <array/list/set>
+        <value>100</value>
+        <value>100</value>
+        <value>100</value>
+    </array/list/set>
+</property>
+
+<property name="map">
+    <map>
+        <entry key="1" value="11"/>
+        <entry key="1" value="11"/>
+        <entry key="1" value="11"/>
+    </map>
+</property>
+
+<property name="properties">
+    <props>
+        <prop key="1">100</prop>
+        <prop key="1">100</prop>
+        <prop key="1">100</prop>
+    </props>
+</property>
+```
