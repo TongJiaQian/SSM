@@ -38,3 +38,4 @@ public void setUserDao(UserDao userDao) {
 ```
 ***
 ## 构造器注入
+方法和setter注入一样，配置文件有不同，一般来说推荐使用setter注入
