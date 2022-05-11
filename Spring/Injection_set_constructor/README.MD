@@ -92,3 +92,38 @@ public void setUserDao(UserDao userDao) {
 带jar包：<context:property-placeholder location="classpath*:*.properties"/>
 占位符：${varname}
 ```
+***
+## 总结
+* 容器  
+** 创建容器  
+```
+类路径(常用)：ApplicationContext ctx = new ClassPathXmlApplicationContext(".xml");
+文件路径：ApplicationContext ctx = new FilePathXmlApplicationContext("C:\\.xml");
+多个配置文件：ApplicationContext ctx = new ClassPathXmlApplicationContext(".xml",".xml");
+```
+** 获取bean  
+```
+Dao dao = (Dao) ctx.getBean("dao");
+Dao dao = ctx.getBean("dao",Dao.class);
+Dao dao = ctx.getBean(Dao.class);(不推荐)
+```
+** 容器相关  
+BeanFactory是Ioc容器顶层接口  
+ApplicationContext是核心接口  
+** bean相关  
+```
+<bean
+    id bean的id
+    name bean别名
+    class bean类型
+    scope bean单例或多例
+    autowire 自动装配
+/>
+```
+** 依赖注入相关  
+```
+<constructor-arg name= ref=/> 构造器注入引用类型
+<constructor-arg name= value=/> 构造器注入简单类型
+<property name= ref=/> setter注入引用类型
+<property name= value=/> setter注入简单类型
+```
