@@ -73,3 +73,22 @@ public void setUserDao(UserDao userDao) {
     </props>
 </property>
 ```
+***
+## 加载properties文件
+* 命名空间(关于beans的改成context)  
+```
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="
+       http://www.springframework.org/schema/beans 
+       http://www.springframework.org/schema/beans/spring-beans.xsd
+       http://www.springframework.org/schema/context 
+       http://www.springframework.org/schema/context/spring-context.xsd">
+```
+* 加载properties文件  
+```
+标准格式：<context:property-placeholder location="classpath:*.properties"/>
+带jar包：<context:property-placeholder location="classpath*:*.properties"/>
+占位符：${varname}
+```

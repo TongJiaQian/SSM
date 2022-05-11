@@ -1,14 +1,22 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="
+       http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd
+       http://www.springframework.org/schema/context
+       http://www.springframework.org/schema/context/spring-context.xsd">
+    <context:property-placeholder location="classpath*:*.properties"/>
     <bean id="userservice" class="com.tongjiaqian.Service.Impl.UserServiceImpl">
         <property name="userDao" ref="userDao"/>
         <property name="bookDao" ref="bookDao"/>
     </bean>
     <bean id="bookDao" class="com.tongjiaqian.Dao.Impl.BookDaoImpl">
-        <property name="number" value="10"/>
-        <property name="string" value="我是注入"/>
+        <property name="number" value="${practice.number}"/>
+        <property name="string" value="${practice.string}"/>
     </bean>
     <bean id="userDao" class="com.tongjiaqian.Dao.Impl.UserDaoImpl"/>
+
+
 </beans>
