@@ -68,4 +68,10 @@ public Object AD(ProceedingJoinPoint pjp) throws Throwable {
 @AfterReturning
 * 抛出异常后
 @AfterThrowing
-
+***
+## AOP通知获取数据  
+* @Before和@After方法的参数：JoinPoint jp  
+获取方法参数：Object[] args = jp.getArgs();  
+* @Around参数：ProceedingJoinPoint pjp  
+获取参数方法：Object[] args = jp.getArgs();
+* @AfterReturning(value = "pointCut()",returning = "ret")
