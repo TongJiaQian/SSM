@@ -1,11 +1,23 @@
 package com.tongjiaqian.config;
 
-import org.springframework.context.annotation.AnnotationConfigApplicationContext;
-import org.springframework.web.context.WebApplicationContext;
-import org.springframework.web.context.support.AnnotationConfigWebApplicationContext;
-import org.springframework.web.servlet.support.AbstractDispatcherServletInitializer;
+import org.springframework.web.servlet.support.AbstractAnnotationConfigDispatcherServletInitializer;
 
-public class WebContainerInit extends AbstractDispatcherServletInitializer {
+public class WebContainerInit extends AbstractAnnotationConfigDispatcherServletInitializer {
+    protected Class<?>[] getRootConfigClasses() {
+        return new Class[]{SpringConfig.class};
+    }
+
+    protected Class<?>[] getServletConfigClasses() {
+        return new Class[]{SpringMvcConfig.class};
+    }
+
+    protected String[] getServletMappings() {
+        return new String[]{"/"};
+    }
+}
+
+/**原版，根，简化版如上
+ * public class WebContainerInit extends AbstractDispatcherServletInitializer {
     protected WebApplicationContext createServletApplicationContext() {
         AnnotationConfigWebApplicationContext ctx = new AnnotationConfigWebApplicationContext();
         ctx.register(SpringMvcConfig.class);
@@ -20,3 +32,4 @@ public class WebContainerInit extends AbstractDispatcherServletInitializer {
         return null;
     }
 }
+ */
