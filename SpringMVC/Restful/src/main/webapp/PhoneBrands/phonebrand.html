@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>手机品牌</title>
+    <link rel="stylesheet" href="../element-ui/lib/theme-chalk/index.css">
+</head>
+<body>
+<div id="app">
+    <el-form :inline="true" :model="formInline" class="demo-form-inline">
+        <el-form-item label="品牌名称">
+            <el-input v-model="formInline.brand" placeholder="如：huawei" @blur="brandName"></el-input>
+        </el-form-item>
+        <el-form-item label="手机型号">
+            <el-input v-model="formInline.model" placeholder="如：mate40"></el-input>
+        </el-form-item>
+        <el-form-item label="手机芯片">
+            <el-input v-model="formInline.soc" placeholder="如：Kirin 990"></el-input>
+        </el-form-item>
+        <el-form-item label="价格区间">
+            <el-col :span="11">
+                <el-input placeholder="左区间" v-model="formInline.priceLow"></el-input>
+            </el-col>
+            <el-col class="line" :span="1">-</el-col>
+            <el-col :span="11">
+                <el-input placeholder="右区间" v-model="formInline.priceHigh" @blur="price_tag"></el-input>
+            </el-col>
+        </el-form-item>
+        <el-form-item>
+            <el-button type="primary" @click="onSubmit">查询</el-button>
+        </el-form-item>
+    </el-form>
+<template>
+    <el-table
+            :data="tempTableData"
+            stripe
+            style="width: 100%">
+        <el-table-column
+                type="selection"
+                width="55">
+        </el-table-column>
+        <el-table-column
+                label="序号"
+                align="center"
+                type="index"
+                width="50">
+        </el-table-column>
+        <el-table-column
+                label="ID"
+                align="center"
+                prop="id"
+                width="50">
+        </el-table-column>
+        <el-table-column
+                align="center"
+                prop="brand"
+                label="品牌"
+                min-width>
+        </el-table-column>
+        <el-table-column
+                align="center"
+                prop="model"
+                label="型号"
+                min-width>
+        </el-table-column>
+        <el-table-column
+                align="center"
+                prop="soc"
+                label="芯片"
+                min-width>
+        </el-table-column>
+        <el-table-column
+                align="center"
+                prop="price"
+                label="价格"
+                min-width>
+        </el-table-column>
+        <el-table-column
+                fixed="right"
+                label="操作"
+                width="100">
+            <template slot-scope="scope">
+                <el-button @click="handleClick(scope.row)" type="text" size="small">编辑</el-button>
+                <el-button @click="deleteBrand(scope.row)" type="text" size="small" >删除</el-button>
+            </template>
+        </el-table-column>
+    </el-table>
+    <div>
+        <el-pagination
+                @size-change="handleSizeChange"
+                @current-change="handleCurrentChange"
+                :current-page="currentPage"
+                :page-sizes="[50,100,200,400]"
+                :page-size="pageSize"
+                layout="total, sizes, prev, pager, next, jumper"
+                :total="totalBrand">
+        </el-pagination>
+    </div>
+    <template>
+        <el-row>
+            <el-button type="primary" plain>添加品牌</el-button>
+        </el-row>
+    </template>
+</template>
+</div>
+
+<script src="../js/vue.js"></script>
+<script src="../js/axios.min.js"></script>
+<script src="../element-ui/lib/index.js"></script>
+<script>
+    var vue = new Vue({
+        el:"#app",
+        mounted(){
+          axios({
+              method: "get",
+              url: "http://localhost:8080/Restful/PhoneBrands"
+          }).then(function (response){
+              vue.tableData = response.data
+              vue.tempTableData = vue.tableData.slice(0,vue.pageSize)
+              vue.totalBrand = vue.tableData.length
+          })
+        },
+        data() {
+            return {
+                //品牌数据
+                tableData:[],
+                tempTableData:[],
+                //分页控件数据
+                currentPage:1,
+                totalBrand:1,
+                pageSize:50,
+                //查询表单数据
+                formInline: {
+                    brand: '',
+                    model: '',
+                    soc:'',
+                    priceLow:'',
+                    priceHigh:''
+                }
+            }
+        },
+        methods: {
+            brandName: function (){
+                axios({
+                    method: "get",
+                    url: "http://localhost:8080/PhoneBrand/PhoneBrandServlet/SelectByBrand?brand="+vue.formInline.brand
+                }).then(function (response){
+                    vue.tableData = response.data
+                    vue.totalBrand = vue.tableData.length
+                    let lastindex = vue.totalBrand<(vue.currentPage)*vue.pageSize?vue.totalBrand:(vue.currentPage)*vue.pageSize
+                    vue.tempTableData = vue.tableData.slice((vue.currentPage-1)*vue.pageSize,lastindex)
+                })
+                console.log(vue.formInline.brand)
+            },
+            onSubmit() {
+                console.log('submit!');
+            },
+            handleClick(row) {
+                console.log(row);
+            },//添加品牌按钮
+            handleSizeChange(val) {
+                console.log(`每页 ${val} 条`);
+                vue.pageSize = val
+                let lastindex = vue.totalBrand<(vue.currentPage)*val?vue.totalBrand:(vue.currentPage)*val
+                vue.tempTableData = vue.tableData.slice((vue.currentPage-1)*val,lastindex)
+            },//分页
+            handleCurrentChange(val) {
+                console.log(`当前页: ${val}`);
+                vue.currentPage = val
+                let lastindex = vue.totalBrand<(val)*vue.pageSize?vue.totalBrand:(val)*vue.pageSize
+                vue.tempTableData = vue.tableData.slice((val-1)*vue.pageSize,lastindex)
+            },//分页
+            deleteBrand: function (row) {
+                this.$alert('删除成功', '操作成功', {
+                    confirmButtonText: '确定',
+                    callback: action => {
+                        this.$message({
+                            type: 'info',
+                            message: `action: ${ action }`
+                        });
+                    }
+                });
+
+                axios({
+                    method: "post",
+                    url: "http://localhost:8080/PhoneBrand/PhoneBrandServlet/DeleteById",
+                    data: "id="+row.id
+                }).then(function (response){
+                    vue.tableData = response.data
+                    vue.totalBrand = vue.tableData.length
+                    let lastindex = vue.totalBrand<(vue.currentPage)*vue.pageSize?vue.totalBrand:(vue.currentPage)*vue.pageSize
+                    vue.tempTableData = vue.tableData.slice((vue.currentPage-1)*vue.pageSize,lastindex)
+                })
+            },//删除品牌
+        }
+    });
+</script>
+</body>
+</html>
